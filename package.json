@@ -1,0 +1,26 @@
+{
+  "name": "jasv2000_project_backend_dt190g",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://JamieSvanberg@bitbucket.org/miun_dt190g/jasv2000_project_backend_dt190g.git"
+  },
+  "author": "Jamie Svanberg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://bitbucket.org/miun_dt190g/jasv2000_project_backend_dt190g/issues"
+  },
+  "homepage": "https://bitbucket.org/miun_dt190g/jasv2000_project_backend_dt190g#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonfile": "^6.1.0",
+    "mongoose": "^6.8.1"
+  }
+}
