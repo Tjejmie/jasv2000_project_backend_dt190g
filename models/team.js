@@ -15,7 +15,7 @@ const teamsSchema = new mongoose.Schema({
 
 });
 
-// Get all courses
+// Get all teams
 teamsSchema.statics.getAllTeams = function () {
     return this.find({});
 };
@@ -24,6 +24,19 @@ teamsSchema.statics.getAllTeams = function () {
 teamsSchema.statics.getTeam = function (organisationNumber) {
     return this.findOne({organisationNumber : organisationNumber});
 };
+
+// Delete a team
+teamsSchema.statics.deleteTeam = function (organisationNumber) {
+    return this
+        .findOneAndRemove({organisationNumber : organisationNumber});
+};
+
+// Update a team
+teamsSchema.statics.updateTeam = function (organisationNumber, division) {
+    return this
+        .findOneAndUpdate({organisationNumber : organisationNumber}, division);
+};
+
 
 
 

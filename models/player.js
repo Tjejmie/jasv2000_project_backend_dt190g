@@ -27,7 +27,17 @@ playersSchema.statics.getPlayer = function (playerId) {
     return this.findOne({playerId : playerId});
 };
 
+// Delete a player
+playersSchema.statics.deletePlayer = function (playerId) {
+    return this
+        .findOneAndRemove({playerId : playerId});
+};
 
+// Update a player
+playersSchema.statics.updatePlayer = function (playerId, teamName) {
+    return this
+        .findOneAndUpdate({playerId : playerId}, teamName);
+};
 
 
 

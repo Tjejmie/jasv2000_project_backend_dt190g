@@ -1,0 +1,183 @@
+@server = http://localhost
+@port = 3000
+@resource = api
+@url = {{server}}:{{port}}/{{resource}}
+
+###############################################
+
+// Test: Get all players
+// Expected HTTP response status code: 200
+// Expected response: an object (json) with an array with all courses (including subject for each course)
+// [{}, {}, ...]
+GET {{url}}/players
+
+###############################################
+
+// Test: Get a player that exists
+// Expected HTTP response status code: 200
+// Expected response: a course object (json) with course data, including subject
+// {"courseCode": "DT190G","subjectCode": "DTA","level": "GR","progression": "B","name": "Javascriptbaserad webbutveckling","points": 7.5,"institutionCode": "DSV","subject": "Datateknik"}
+GET {{url}}/players/simber15
+
+###############################################
+
+// Test: Get a player that does not exists
+// Expected HTTP response status code: 200
+// Expected response: an empty object (json)
+// {}
+GET {{url}}/players/asd
+
+###############################################
+
+// Test: Get all teams
+// Expected HTTP response status code: 200
+// Expected response: an object (json) with an array with all my courses and data from corresponding miun courses
+//  [{}, {}, ...]
+GET {{url}}/teams
+
+###############################################
+
+// Test: Get a team that exists
+// Expected HTTP response status code: 200
+// Expected response: a my course object (json) with status and all data from corresponding miun course
+// {"courseCode": "DT190G", "grade": "-", "subjectCode": "DTA","level": "GR","progression": "B","name": "Javascriptbaserad webbutveckling","points": 7.5,"institutionCode": "DSV","subject": "Datateknik"}
+GET {{url}}/teams/885000-0152
+
+###############################################
+
+// Test: Get a team that does not exists
+// Expected HTTP response status code: 200
+// Expected response: an empty object (json)
+// {}
+GET {{url}}/teams/8853000-0152
+
+###############################################
+
+// Test: Delete a player that does not exists
+// Expected HTTP response status code: 404
+// Expected response: an object (json) with an error message stating that the my course does not exist
+// {"error":"an_error_message"}
+DELETE {{url}}/players/asd
+
+###############################################
+
+// Test: Delete a player that exists
+// Expected HTTP response status code: 200
+// Expected response: an object (json) with the deleted course
+// {"courseCode": "DT005U", "grade": "b", ..., "subject": "Datateknik"}
+DELETE {{url}}/players/antrod18
+
+###############################################
+
+// Test: Delete a team that does not exists
+// Expected HTTP response status code: 404
+// Expected response: an object (json) with an error message stating that the my course does not exist
+// {"error":"an_error_message"}
+DELETE {{url}}/teams/234234
+
+###############################################
+
+// Test: Delete a team that exists and all its players
+// Expected HTTP response status code: 200
+// Expected response: an object (json) with the deleted team
+
+DELETE {{url}}/teams/885000-0152
+
+
+###############################################
+
+// Test: Put (update) a team that exists
+// Expected HTTP response status code: 200
+// Expected response: an object (json) with the updated team
+PUT {{url}}/teams/873200-4869 HTTP/1.1
+content-type: application/json
+
+{
+   "division": "SHL"
+}
+
+
+###############################################
+
+// Test: Put (update) a team that does not exists
+// Expected HTTP response status code: 404
+// Expected response: an object (json) with an error message stating that the my course does not exist
+// {"error":"an_error_message"}
+PUT {{url}}/teams/123123 HTTP/1.1
+content-type: application/json
+
+{
+   "division": "SHL"
+}
+
+###############################################
+
+// Test: Put (update) a player that exists
+// Expected HTTP response status code: 200
+// Expected response: an object (json) with the updated team
+PUT {{url}}/players/marnil10 HTTP/1.1
+content-type: application/json
+
+{
+   "teamName": "Färjestad"
+}
+
+
+###############################################
+
+// Test: Put (update) a player that does not exists
+// Expected HTTP response status code: 404
+// Expected response: an object (json) with an error message stating that the my course does not exist
+// {"error":"an_error_message"}
+PUT {{url}}/players/123123 HTTP/1.1
+content-type: application/json
+
+{
+   "teamName": "Färjestad"
+}
+
+
+###############################################
+
+// Test: Post (add) a team that does not already exist
+// Expected HTTP response status code: 201
+// Expected response: an object (json) with the added course
+// {"courseCode": "DT005U", "grade": "f", ..., "subject": "Datateknik"}
+POST {{url}}/teams HTTP/1.1
+content-type: application/json
+
+{
+"teamName": "Djurgården",
+"created": 1891,
+"location": "Stockholm",
+"arena": "Hovet",
+"organisationNumber": "556536-8734",
+"headCoach": "Johan Garpenlöv",
+"division": "Hockeyallsvenskan",
+"SMgolds": 16
+}
+
+
+###############################################
+
+// Test: Post (add) a player that does not already exist
+// Expected HTTP response status code: 201
+// Expected response: an object (json) with the added course
+// {"courseCode": "DT005U", "grade": "f", ..., "subject": "Datateknik"}
+POST {{url}}/players HTTP/1.1
+content-type: application/json
+
+{
+"name": "Daniel Brodin",
+"teamName": "Djurgården",
+"position": "Forward",
+"number": 34,
+"born": "1990-02-09",
+"birthplace": "Sweden",
+"length": 186,
+"weight": 88,
+"shoots": "Höger",
+"playerId": "danbro34",
+"youthTeam": "Hanvikens SK",
+"contract": "26/27"
+}
