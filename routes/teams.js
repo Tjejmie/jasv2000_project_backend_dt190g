@@ -1,16 +1,21 @@
+/** Include all needed dependencies */
 const routes = require('express').Router();
 const Team = require('../models/team');
 const Player = require('../models/player');
 
-// Get all teams
+/** Get all teams
+ * Register a route handler function that Express will call when it recieves an
+ * GET request to /api/teams */
 routes.get('/api/teams', function (req, res) {
     Team.getAllTeams()
         .then(teams => res.status(200).json(teams));
 });
 
-// Get specific team, return {} if it doesn't exist
+/** Get a specific team
+ * Register a route handler function that Express will call when it recieves an
+ * GET request to /api/teams/:organisationNumber. Return {} if organisationNumber does not exist */
 routes.get('/api/teams/:organisationNumber', function (req, res) {
-    const organisationNumber = req.params.organisationNumber.toLowerCase();
+    const organisationNumber = req.params.organisationNumber;
     Team.getTeam(organisationNumber)
         .then(team => {
             if (team?.organisationNumber) {
@@ -23,11 +28,23 @@ routes.get('/api/teams/:organisationNumber', function (req, res) {
         })
 });
 
-// Get all players of a team
-routes.get('/api/teams/players/:teamName', async function (req, res) {
-    const teamName = req.params.teamName.toTitle();
+/** Get all players of a team
+ * Register a route handler function that Express will call when it recieves an
+ * GET request to /api/teams/players/:organisationNumber
+ * Return all players or {} if no players of that team exists */
+routes.get('/api/teams/players/:organisationNumber', async function (req, res) {
+    const organisationNumber = req.params.organisationNumber;
+    const teams = await Team.getAllTeams();
     const players = await Player.getAllPlayers();
+    let teamName;
     const playerOfTeam = [];
+    //get team name
+    for(let i = 0; i< teams.length; i++){
+        if(teams[i].organisationNumber == organisationNumber){
+            teamName = teams[i].teamName;
+        }
+    }
+    //get all players that have same teamname and add to array
     for(let i = 0; i< players.length; i++){
         if(players[i].teamName == teamName){
             playerOfTeam.push(players[i]);
@@ -40,12 +57,11 @@ routes.get('/api/teams/players/:teamName', async function (req, res) {
         
         res.status(200).json({});
     }
-   
-   
 });
 
-
-// Delete specific team and all its players
+/** Delete specific team and all its players
+ * Register a route handler function that Express will call when it recieves an
+ * DELETE request to /api/teams/:organisationNumber. */
 routes.delete('/api/teams/:organisationNumber', async function (req, res) { 
     const organisationNumber = req.params.organisationNumber;
     const errorResponse = `Not possible to delete team: ${organisationNumber}`;
@@ -55,7 +71,7 @@ routes.delete('/api/teams/:organisationNumber', async function (req, res) {
 
             // See if players for that team exist and delete them
             for(let i = 0; i< players.length; i++){
-                if(players[i].teamName == team.teamName){
+                if(players[i].organisationNumber == team.organisationNumber){
                     await Player.deletePlayer(players[i].playerId)
                 }
             }
@@ -65,13 +81,14 @@ routes.delete('/api/teams/:organisationNumber', async function (req, res) {
             res.status(200).json(team);
         }
         else {
-            
             res.status(404).json({ error: errorResponse })
         }
     })
 });
 
-// Update team
+/** Update team
+ * Register a route handler function that Express will call when it recieves an
+ * PUT request to /api/teams/:organisationNumber */
 routes.put('/api/teams/:organisationNumber', async function (req, res) { 
     const organisationNumber = req.params.organisationNumber;
     const errorResponse = `Not possible to update team: ${organisationNumber}`;
@@ -80,8 +97,7 @@ routes.put('/api/teams/:organisationNumber', async function (req, res) {
     const userDataToUpdate = {
         division: req.body.division,
     };
-
-    // Get specific team thats gonna be updated
+    // Get specific team thats going to be updated
     Team.getTeam(organisationNumber).then(async team => {
         if (team?.organisationNumber) {
             //Update team
@@ -97,7 +113,9 @@ routes.put('/api/teams/:organisationNumber', async function (req, res) {
     })
 });
 
-// Add a team
+/** Add a team
+ * Register a route handler function that Express will call when it recieves an
+ * POST request to /api/teams */
 routes.post('/api/teams', async function (req, res) {
     const teams = await Team.getAllTeams();
     var isAlreadyATeam = false;
@@ -112,31 +130,19 @@ routes.post('/api/teams', async function (req, res) {
         division: req.body.division,
         SMgolds: req.body.SMgolds
     });
-
+    // Check if teamName already exists
     for(let i = 0; i < teams.length; i++){
         if(newTeam.teamName == teams[i].teamName){
             isAlreadyATeam = true;
         }
     }
-
     if (isAlreadyATeam != true) {
         await newTeam.save();
-       
         res.status(200).json(newTeam);
     }
     else{
         res.status(409).send({"error": "Team already exist"});                   
     }
 });
-
-
-
-
-/** Function to call to change a string to title case,
- * it matches only the first letter of each word and capitalise it. */
-String.prototype.toTitle = function() {
-    return this.replace(/(^|\s)\S/g, function(t) { return t.toUpperCase() });
-}
-
 
 module.exports = routes;

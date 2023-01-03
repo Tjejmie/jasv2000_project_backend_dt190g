@@ -1,13 +1,13 @@
-// Include all needed modules
+/** Include all needed modules */
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const teamRoutes = require('./routes/teams');
 const playerRoutes = require('./routes/players');
+const leagueRoutes = require('./routes/leagues');
 
-
+/** Connection to use .env fie */
 require('dotenv').config();
-/** URI to the db server (defined in .env) */
 mongoose.connect(process.env.DB_SERVER);
 
 
@@ -47,7 +47,6 @@ mongoose.connection.on('disconnected', () => {
 });
 
 
-
 // Define the port the server will accept connections on
 // If deployed to Azure, process.env.PORT is used
 const port = process.env.PORT || 3000;
@@ -71,7 +70,7 @@ app.use(express.urlencoded({ extended: true }));
 // Connect all routes to the root of the app
 app.use('/', teamRoutes);
 app.use('/', playerRoutes);
-
+app.use('/', leagueRoutes);
 
 
 // Start the server

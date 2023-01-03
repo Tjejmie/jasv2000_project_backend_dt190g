@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/0cc72e87-5776-4ecd-bbba-501989d0791c/AppServices/subscriptions/0cc72e87-5776-4ecd-bbba-501989d0791c/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/jasv2000-project-backend-dt190g",
+    "appService.deploySubpath": "."
+}

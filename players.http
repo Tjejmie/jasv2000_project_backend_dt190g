@@ -89,11 +89,11 @@ DELETE {{url}}/teams/885000-0152
 // Test: Put (update) a team that exists
 // Expected HTTP response status code: 200
 // Expected response: an object (json) with the updated team
-PUT {{url}}/teams/873200-4869 HTTP/1.1
+PUT {{url}}/teams/559011-0309 HTTP/1.1
 content-type: application/json
 
 {
-   "division": "SHL"
+   "division": "Hockeyallsvenskan"
 }
 
 
